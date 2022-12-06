@@ -50,13 +50,13 @@ config = {
 tutor_hooks.Filters.COMMANDS_INIT.add_item(
     (
         "lms",
-        ("mfe", "tasks", "lms", "init"),
+        ("mfe_chooseaerospace", "tasks", "lms", "init"),
     )
 )
 tutor_hooks.Filters.IMAGES_BUILD.add_item(
     (
-        "mfe",
-        ("plugins", "mfe", "build", "mfe"),
+        "mfe_chooseaerospace",
+        ("plugins", "mfe_chooseaerospace", "build", "mfe"),
         "{{ MFE_DOCKER_IMAGE }}",
         (),
     )
@@ -99,25 +99,25 @@ def _add_remote_mfe_image_iff_customized(images, user_config):
     image_tag = user_config["MFE_DOCKER_IMAGE"]
     if not image_tag.startswith("docker.io/overhangio/openedx-mfe:"):
         # Image has been customized. Add to list for pulling/pushing.
-        images.append(("mfe", image_tag))
+        images.append(("mfe-chooseaerospace", image_tag))
     return images
 
 ####### Boilerplate code
 # Add the "templates" folder as a template root
 tutor_hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
-    pkg_resources.resource_filename("tutormfe", "templates")
+    pkg_resources.resource_filename("tutormfe_chooseaerospace", "templates")
 )
 # Render the "build" and "apps" folders
 tutor_hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
     [
-        ("mfe/build", "plugins"),
-        ("mfe/apps", "plugins"),
+        ("mfe_chooseaerospace/build", "plugins"),
+        ("mfe_chooseaerospace/apps", "plugins"),
     ],
 )
 # Load patches from files
 for path in glob(
     os.path.join(
-        pkg_resources.resource_filename("tutormfe", "patches"),
+        pkg_resources.resource_filename("tutormfe_chooseaerospace", "patches"),
         "*",
     )
 ):
@@ -126,9 +126,9 @@ for path in glob(
 
 # Add configuration entries
 tutor_hooks.Filters.CONFIG_DEFAULTS.add_items(
-    [(f"MFE_{key}", value) for key, value in config.get("defaults", {}).items()]
+    [(f"MFE_CHOOSEAEROSPACE_{key}", value) for key, value in config.get("defaults", {}).items()]
 )
 tutor_hooks.Filters.CONFIG_UNIQUE.add_items(
-    [(f"MFE_{key}", value) for key, value in config.get("unique", {}).items()]
+    [(f"MFE_CHOOSEAEROSPACE_{key}", value) for key, value in config.get("unique", {}).items()]
 )
 tutor_hooks.Filters.CONFIG_OVERRIDES.add_items(list(config.get("overrides", {}).items()))
