@@ -13,7 +13,7 @@ def load_readme():
 def load_about():
     about = {}
     with io.open(
-        os.path.join(HERE, "tutormfe", "__about__.py"), "rt", encoding="utf-8"
+        os.path.join(HERE, "tutormfe_chooseaerospace", "__about__.py"), "rt", encoding="utf-8"
     ) as f:
         exec(f.read(), about)  # pylint: disable=exec-used
     return about
@@ -22,7 +22,7 @@ def load_about():
 ABOUT = load_about()
 
 setup(
-    name="tutor-mfe",
+    name="tutor-mfe-chooseaerospace",
     version=ABOUT["__version__"],
     url="https://github.com/overhangio/tutor-mfe",
     project_urls={
@@ -38,7 +38,7 @@ setup(
     include_package_data=True,
     python_requires=">=3.5",
     install_requires=["tutor>=13.2.0,<14.0.0"],
-    entry_points={"tutor.plugin.v1": ["mfe = tutormfe.plugin"]},
+    entry_points={"tutor.plugin.v1": ["mfe-chooseaerospace = tutormfe_chooseaerospace.plugin"]},
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
