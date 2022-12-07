@@ -9,11 +9,11 @@ from .__about__ import __version__
 config = {
     "defaults": {
         "VERSION": __version__,
-        "DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}overhangio/openedx-mfe:{{ MFE_VERSION }}",
-        "HOST": "apps.{{ LMS_HOST }}",
+        "DOCKER_IMAGE": "{{ DOCKER_REGISTRY }}overhangio/openedx-mfe-chooseaerospace:{{ MFE_VERSION }}",
+        "HOST": "{{ CHOOSE_AEROSPACE_MFE_HOST }}",
         "COMMON_VERSION": "{{ OPENEDX_COMMON_VERSION }}",
         "CADDY_DOCKER_IMAGE": "{{ DOCKER_IMAGE_CADDY }}",
-        "ACCOUNT_MFE_APP": {
+        "ACCOUNT_MFE_APP_CHOOSEAEROSPACE": {
             "name": "account",
             "repository": "https://github.com/edx/frontend-app-account",
             "port": 1997,
@@ -24,17 +24,17 @@ config = {
                 },
             },
         },
-        "GRADEBOOK_MFE_APP": {
+        "GRADEBOOK_MFE_APP_CHOOSEAEROSPACE": {
             "name": "gradebook",
             "repository": "https://github.com/edx/frontend-app-gradebook",
             "port": 1994,
         },
-        "LEARNING_MFE_APP": {
+        "LEARNING_MFE_APP_CHOOSEAEROSPACE": {
             "name": "learning",
             "repository": "https://github.com/edx/frontend-app-learning",
             "port": 2000,
         },
-        "PROFILE_MFE_APP": {
+        "PROFILE_MFE_APP_CHOOSEAEROSPACE": {
             "name": "profile",
             "repository": "https://github.com/edx/frontend-app-profile",
             "port": 1995,
@@ -50,13 +50,13 @@ config = {
 tutor_hooks.Filters.COMMANDS_INIT.add_item(
     (
         "lms",
-        ("mfe_chooseaerospace", "tasks", "lms", "init"),
+        ("mfe-chooseaerospace", "tasks", "lms", "init"),
     )
 )
 tutor_hooks.Filters.IMAGES_BUILD.add_item(
     (
-        "mfe_chooseaerospace",
-        ("plugins", "mfe_chooseaerospace", "build", "mfe"),
+        "mfe-chooseaerospace",
+        ("plugins", "mfe-chooseaerospace", "build", "mfe"),
         "{{ MFE_DOCKER_IMAGE }}",
         (),
     )
@@ -110,8 +110,8 @@ tutor_hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
 # Render the "build" and "apps" folders
 tutor_hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
     [
-        ("mfe_chooseaerospace/build", "plugins"),
-        ("mfe_chooseaerospace/apps", "plugins"),
+        ("mfe-chooseaerospace/build", "plugins"),
+        ("mfe-chooseaerospace/apps", "plugins"),
     ],
 )
 # Load patches from files
@@ -126,9 +126,9 @@ for path in glob(
 
 # Add configuration entries
 tutor_hooks.Filters.CONFIG_DEFAULTS.add_items(
-    [(f"MFE_CHOOSEAEROSPACE_{key}", value) for key, value in config.get("defaults", {}).items()]
+    [(f"MFE_{key}", value) for key, value in config.get("defaults", {}).items()]
 )
 tutor_hooks.Filters.CONFIG_UNIQUE.add_items(
-    [(f"MFE_CHOOSEAEROSPACE_{key}", value) for key, value in config.get("unique", {}).items()]
+    [(f"MFE_{key}", value) for key, value in config.get("unique", {}).items()]
 )
 tutor_hooks.Filters.CONFIG_OVERRIDES.add_items(list(config.get("overrides", {}).items()))

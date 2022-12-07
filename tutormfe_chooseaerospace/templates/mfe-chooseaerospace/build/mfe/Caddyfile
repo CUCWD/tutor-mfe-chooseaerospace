@@ -1,5 +1,5 @@
 :8002 {
-    {% for app in iter_values_named(suffix="MFE_APP") %}
+    {% for app in iter_values_named(suffix="MFE_APP_CHOOSEAEROSPACE") %}
     @mfe_{{ app["name"] }} {
         path /{{ app["name"] }} /{{ app["name"] }}/*
     }
