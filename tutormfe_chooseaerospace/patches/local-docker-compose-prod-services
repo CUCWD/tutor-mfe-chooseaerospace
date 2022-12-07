@@ -1,6 +1,7 @@
-# MFE
-mfe:
-    image: {{ MFE_DOCKER_IMAGE }}
+
+# MFE Choose Aerospace
+mfe-chooseaerospace:
+    image: {{ MFE_CHOOSEAEROSPACE_DOCKER_IMAGE }}
     build:
-        context: ../plugins/mfe/build/mfe/
+        context: ../plugins/mfe-chooseaerospace/build/mfe/
     restart: unless-stopped
