@@ -47,12 +47,12 @@ config = {
     },
 }
 
-tutor_hooks.Filters.COMMANDS_INIT.add_item(
-    (
-        "lms",
-        ("mfe-chooseaerospace", "tasks", "lms", "init"),
-    )
-)
+# tutor_hooks.Filters.COMMANDS_INIT.add_item(
+#     (
+#         "lms",
+#         ("mfe-chooseaerospace", "tasks", "lms", "init"),
+#     )
+# )
 tutor_hooks.Filters.IMAGES_BUILD.add_item(
     (
         "mfe-chooseaerospace",
