@@ -13,7 +13,15 @@ config = {
         "HOST": "{{ CHOOSE_AEROSPACE_MFE_HOST }}",
         "COMMON_VERSION": "{{ OPENEDX_COMMON_VERSION }}",
         "CADDY_DOCKER_IMAGE": "{{ DOCKER_IMAGE_CADDY }}",
-        "ACCOUNT_MFE_APP_CHOOSEAEROSPACE": {
+        # S3 MFE Staticfiles
+        # ----------------------
+        # The bucket name to use for S3 static files
+        "STATIC_FILES_BUCKET_NAME": "SET_ME_PLEASE",
+        # AWS S3 settings
+        "AWS_STATIC_FILES_ACCESS_KEY_ID": "SET_ME_PLEASE",
+        "AWS_STATIC_FILES_SECRET_KEY": "SET_ME_PLEASE",
+        "DEPLOY_S3": False,
+        "ACCOUNT_MFE_APP": {
             "name": "account",
             "repository": "https://github.com/edx/frontend-app-account",
             "port": 1997,
@@ -24,17 +32,17 @@ config = {
                 },
             },
         },
-        "GRADEBOOK_MFE_APP_CHOOSEAEROSPACE": {
+        "GRADEBOOK_MFE_APP": {
             "name": "gradebook",
             "repository": "https://github.com/edx/frontend-app-gradebook",
             "port": 1994,
         },
-        "LEARNING_MFE_APP_CHOOSEAEROSPACE": {
+        "LEARNING_MFE_APP": {
             "name": "learning",
             "repository": "https://github.com/edx/frontend-app-learning",
             "port": 2000,
         },
-        "PROFILE_MFE_APP_CHOOSEAEROSPACE": {
+        "PROFILE_MFE_APP": {
             "name": "profile",
             "repository": "https://github.com/edx/frontend-app-profile",
             "port": 1995,
@@ -57,7 +65,7 @@ tutor_hooks.Filters.IMAGES_BUILD.add_item(
     (
         "mfe-chooseaerospace",
         ("plugins", "mfe-chooseaerospace", "build", "mfe"),
-        "{{ MFE_DOCKER_IMAGE }}",
+        "{{ MFE_DOCKER_IMAGE_CHOOSEAEROSPACE }}",
         (),
     )
 )
@@ -126,9 +134,9 @@ for path in glob(
 
 # Add configuration entries
 tutor_hooks.Filters.CONFIG_DEFAULTS.add_items(
-    [(f"MFE_{key}", value) for key, value in config.get("defaults", {}).items()]
+    [(f"MFE_{key}_CHOOSEAEROSPACE", value) for key, value in config.get("defaults", {}).items()]
 )
 tutor_hooks.Filters.CONFIG_UNIQUE.add_items(
-    [(f"MFE_{key}", value) for key, value in config.get("unique", {}).items()]
+    [(f"MFE_{key}_CHOOSEAEROSPACE", value) for key, value in config.get("unique", {}).items()]
 )
 tutor_hooks.Filters.CONFIG_OVERRIDES.add_items(list(config.get("overrides", {}).items()))
