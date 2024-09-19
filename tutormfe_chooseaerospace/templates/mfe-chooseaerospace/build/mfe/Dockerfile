@@ -50,7 +50,8 @@ RUN npm clean-install --no-audit --no-fund --registry=$NPM_REGISTRY \
 {{ patch("mfe-dockerfile-post-npm-install") }}
 COPY --from={{ app["name"] }}-chooseaerospace-src /openedx/app /openedx/app
 COPY --from={{ app["name"] }}-chooseaerospace-i18n /openedx/app/src/i18n/messages /openedx/app/src/i18n/messages
-ENV PUBLIC_PATH='/{{ app["name"] }}/'
+ENV PUBLIC_PATH='https://{{ MFE_PUBLIC_PATH_CHOOSEAEROSPACE }}/{{ app["name"] }}/'
+# ENV PUBLIC_PATH='/{{ app["name"] }}/'
 EXPOSE {{ app['port'] }}
 CMD ["npm", "run", "start"]
 ######## {{ app["name"] }} (production)
@@ -62,8 +63,28 @@ RUN touch /openedx/env/production.override \
   {%- endfor %}
   && echo "done setting production overrides"
 RUN bash -c "set -a && source /openedx/env/production && source /openedx/env/production.override && npm run build"
+
+{% if MFE_DEPLOY_S3_CHOOSEAEROSPACE %}
+######## {{ app["name"] }} (chooseaerospace-upload-static-files-to-s3)
+FROM {{ app["name"] }} AS {{ app["name"] }}-chooseaerospace-upload-static-files-to-s3
+
+# Install aws cli
+RUN apt install -y curl unzip && \
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+  unzip awscliv2.zip && \
+  ./aws/install --bin-dir /openedx/bin --install-dir /openedx/aws-cli && rm -r aws awscliv2.zip
+
+# Copy AWS CLI credentials.
+RUN mkdir -p /root/.aws/
+COPY ./aws/config /root/.aws/config
+COPY ./aws/credentials /root/.aws/credentials
+
+RUN /openedx/aws-cli/v2/current/bin/aws --profile s3-uploader s3 sync --delete --follow-symlinks /openedx/app/dist/ s3://{{ MFE_STATIC_FILES_BUCKET_NAME_CHOOSEAEROSPACE }}/{{ app["name"] }}/
+{% endif %}
+
 {% endfor %}
 
+{% if not MFE_DEPLOY_S3_CHOOSEAEROSPACE %}
 ####### final production image with all static assets
 FROM {{ MFE_CADDY_DOCKER_IMAGE }} as production
 
@@ -76,3 +97,4 @@ COPY --from={{ app["name"] }} /openedx/app/dist /openedx/dist/{{ app["name"] }}
 
 # Copy caddy config file
 COPY ./Caddyfile /etc/caddy/Caddyfile
+{% endif %}

@@ -1,0 +1,4 @@
+# Profile for S3 upload
+[profile s3-uploader]
+region=us-east-1
+output=json
